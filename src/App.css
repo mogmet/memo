@@ -1,0 +1,192 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif;
+  background: #f5f5f5;
+  color: #333;
+}
+
+.app {
+  display: flex;
+  height: 100vh;
+}
+
+/* サイドバー - メモ一覧 */
+.memo-list {
+  width: 280px;
+  background: #fff;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.memo-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.memo-list-header h2 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.btn-new {
+  background: #4a90d9;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.btn-new:hover {
+  background: #3a7bc8;
+}
+
+.memo-list ul {
+  list-style: none;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.memo-list li {
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.memo-list li:hover {
+  background: #f8f8f8;
+}
+
+.memo-list li.selected {
+  background: #e8f0fe;
+}
+
+.memo-title {
+  font-size: 14px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.memo-date {
+  font-size: 11px;
+  color: #999;
+}
+
+.memo-list .empty {
+  padding: 24px 16px;
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+}
+
+/* エディター */
+.memo-editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+}
+
+.memo-editor.empty-state {
+  justify-content: center;
+  align-items: center;
+  color: #999;
+  font-size: 16px;
+}
+
+.memo-title-input {
+  font-size: 20px;
+  font-weight: 600;
+  border: none;
+  outline: none;
+  padding: 8px 0;
+  background: transparent;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 16px;
+}
+
+.memo-content-input {
+  flex: 1;
+  font-size: 15px;
+  line-height: 1.7;
+  border: none;
+  outline: none;
+  resize: none;
+  background: transparent;
+  font-family: inherit;
+}
+
+.emoji-toolbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 4px 0 8px;
+}
+
+.emoji-trigger-btn {
+  background: none;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.emoji-trigger-btn:hover {
+  background: #f0f0f0;
+}
+
+.emoji-picker-popup {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.memo-editor-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.memo-updated {
+  font-size: 12px;
+  color: #999;
+}
+
+.btn-delete {
+  background: none;
+  border: 1px solid #e74c3c;
+  color: #e74c3c;
+  padding: 6px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.btn-delete:hover {
+  background: #e74c3c;
+  color: #fff;
+}
