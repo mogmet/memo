@@ -7,6 +7,7 @@ interface Props {
   onNew: () => void
   searchQuery: string
   onSearchChange: (query: string) => void
+  hasMemos: boolean
 }
 
 export function MemoList({
@@ -16,6 +17,7 @@ export function MemoList({
   onNew,
   searchQuery,
   onSearchChange,
+  hasMemos,
 }: Props) {
   return (
     <div className="memo-list">
@@ -46,7 +48,12 @@ export function MemoList({
           </li>
         ))}
       </ul>
-      {memos.length === 0 && <p className="empty">メモがありません</p>}
+      {memos.length === 0 && !hasMemos && (
+        <p className="empty">メモがありません</p>
+      )}
+      {memos.length === 0 && hasMemos && (
+        <p className="empty">該当するメモがありません</p>
+      )}
     </div>
   )
 }

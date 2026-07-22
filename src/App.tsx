@@ -59,6 +59,7 @@ export default function App() {
         onNew={handleNew}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        hasMemos={memos.length > 0}
       />
       <MemoEditor
         memo={selectedMemo}
