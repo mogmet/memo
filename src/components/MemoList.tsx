@@ -5,14 +5,32 @@ interface Props {
   selectedId: string | null
   onSelect: (memo: Memo) => void
   onNew: () => void
+  searchQuery: string
+  onSearchChange: (query: string) => void
 }
 
-export function MemoList({ memos, selectedId, onSelect, onNew }: Props) {
+export function MemoList({
+  memos,
+  selectedId,
+  onSelect,
+  onNew,
+  searchQuery,
+  onSearchChange,
+}: Props) {
   return (
     <div className="memo-list">
       <div className="memo-list-header">
         <h2>メモ一覧</h2>
         <button onClick={onNew} className="btn-new">+ 新規</button>
+      </div>
+      <div className="memo-list-search">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => onSearchChange(e.target.value)}
+          placeholder="メモを検索"
+          className="memo-search-input"
+        />
       </div>
       <ul>
         {memos.map((memo) => (
