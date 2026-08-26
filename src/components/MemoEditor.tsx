@@ -29,7 +29,7 @@ export function MemoEditor({ memo, onSave, onReminderSave, onDelete }: Props) {
     setContent(memo?.content ?? '')
     setReminderAt(formatDateTimeLocal(memo?.reminderAt))
     setShowEmojiPicker(false)
-  }, [memo])
+  }, [memo?.id])
 
   const insertEmoji = (emoji: string) => {
     const textarea = textareaRef.current

@@ -315,25 +315,38 @@ body {
 .reminder-toast-title {
   font-size: 24px;
   font-weight: 700;
+  background: rgba(19, 8, 51, 0.82);
+  border-radius: 5px;
+  padding: 3px 6px;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-shadow: 0 1px 2px #130833;
   white-space: nowrap;
 }
 
 .reminder-toast-content {
   margin-top: 8px;
+  background: rgba(19, 8, 51, 0.82);
+  border-radius: 5px;
+  padding: 3px 6px;
   color: #fff;
   line-height: 1.5;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-shadow: 0 1px 2px #130833;
   white-space: nowrap;
 }
 
 .reminder-toast-date {
   margin-top: 10px;
+  display: inline-block;
+  background: rgba(19, 8, 51, 0.82);
+  border-radius: 5px;
+  padding: 3px 6px;
   color: #fff;
   font-size: 13px;
   font-weight: 600;
+  text-shadow: 0 1px 2px #130833;
 }
 
 .reminder-toast-close {

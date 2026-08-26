@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const DATA_DIR = path.join(__dirname, '..', 'data')
 const MEMOS_FILE = path.join(DATA_DIR, 'memos.json')
+let memoUpdateQueue = Promise.resolve()
 
 export interface Memo {
   id: string
@@ -66,33 +67,41 @@ app.post('/api/memos', async (req, res) => {
 
 // 更新
 app.put('/api/memos/:id', async (req, res) => {
-  await ensureDataFile()
-  const memos = await readMemos()
-  const index = memos.findIndex((m) => m.id === req.params.id)
-  if (index === -1) {
+  const update = async () => {
+    await ensureDataFile()
+    const memos = await readMemos()
+    const index = memos.findIndex((m) => m.id === req.params.id)
+    if (index === -1) return null
+    const currentMemo = memos[index]
+    const hasReminderAt = Object.prototype.hasOwnProperty.call(req.body, 'reminderAt')
+    const hasReminderTriggeredAt = Object.prototype.hasOwnProperty.call(req.body, 'reminderTriggeredAt')
+    const reminderAt = hasReminderAt ? req.body.reminderAt || undefined : currentMemo.reminderAt
+    const reminderChanged = hasReminderAt && reminderAt !== currentMemo.reminderAt
+
+    memos[index] = {
+      ...currentMemo,
+      title: req.body.title ?? currentMemo.title,
+      content: req.body.content ?? currentMemo.content,
+      reminderAt,
+      reminderTriggeredAt: reminderChanged
+        ? undefined
+        : hasReminderTriggeredAt
+          ? req.body.reminderTriggeredAt || undefined
+          : currentMemo.reminderTriggeredAt,
+      updatedAt: new Date().toISOString(),
+    }
+    await writeMemos(memos)
+    return memos[index]
+  }
+
+  const queuedUpdate = memoUpdateQueue.then(update, update)
+  memoUpdateQueue = queuedUpdate.then(() => undefined, () => undefined)
+  const memo = await queuedUpdate
+  if (!memo) {
     res.status(404).json({ error: 'Not found' })
     return
   }
-  const currentMemo = memos[index]
-  const hasReminderAt = Object.prototype.hasOwnProperty.call(req.body, 'reminderAt')
-  const hasReminderTriggeredAt = Object.prototype.hasOwnProperty.call(req.body, 'reminderTriggeredAt')
-  const reminderAt = hasReminderAt ? req.body.reminderAt || undefined : currentMemo.reminderAt
-  const reminderChanged = hasReminderAt && reminderAt !== currentMemo.reminderAt
-
-  memos[index] = {
-    ...currentMemo,
-    title: req.body.title ?? currentMemo.title,
-    content: req.body.content ?? currentMemo.content,
-    reminderAt,
-    reminderTriggeredAt: reminderChanged
-      ? undefined
-      : hasReminderTriggeredAt
-        ? req.body.reminderTriggeredAt || undefined
-        : currentMemo.reminderTriggeredAt,
-    updatedAt: new Date().toISOString(),
-  }
-  await writeMemos(memos)
-  res.json(memos[index])
+  res.json(memo)
 })
 
 // 削除

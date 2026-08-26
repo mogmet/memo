@@ -7,6 +7,7 @@ import './App.css'
 
 interface ReminderToast {
   id: string
+  memoId: string
   memo: Memo
 }
 
@@ -102,9 +103,10 @@ export default function App() {
         try {
           const updated = await updateMemo(memo.id, { reminderTriggeredAt: new Date().toISOString() })
           setMemos((prev) => prev.map((item) => (item.id === updated.id ? updated : item)))
-          setReminderToasts((prev) => prev.some((toast) => toast.id === memo.id)
+          const toastId = `${memo.id}-${updated.reminderAt}`
+          setReminderToasts((prev) => prev.some((toast) => toast.id === toastId)
             ? prev
-            : [...prev, { id: memo.id, memo: updated }])
+            : [...prev, { id: toastId, memoId: memo.id, memo: updated }])
           return updated
         } catch {
           return null
@@ -146,7 +148,7 @@ export default function App() {
     if (!selectedId) return
     await deleteMemo(selectedId)
     setMemos((prev) => prev.filter((m) => m.id !== selectedId))
-    setReminderToasts((prev) => prev.filter((toast) => toast.id !== selectedId))
+    setReminderToasts((prev) => prev.filter((toast) => toast.memoId !== selectedId))
     setSelectedId(null)
   }
 
