@@ -40,7 +40,10 @@ fi
 cd "$ROOT"
 
 # --json: thread_id をログから拾うため / --output-last-message: 最終回答だけを取り出すため
-COMMON=(--json --output-last-message "$LAST_MSG" --skip-git-repo-check)
+# writable_roots に .git を明示するのは、workspace-write が既定で .git への書き込みを
+# 拒否するため。そのままだと Generator がストーリー単位で commit できない。
+COMMON=(--json --output-last-message "$LAST_MSG" --skip-git-repo-check
+        -c "sandbox_workspace_write.writable_roots=[\"$ROOT/.git\"]")
 
 if [[ -s "$SESSION_FILE" ]]; then
   # resume は --sandbox を取らないので config 上書きで渡す
