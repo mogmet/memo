@@ -114,25 +114,40 @@ export default function App() {
       />
       {reminderToasts.length > 0 && (
         <div className="reminder-toast-container" aria-live="assertive">
-          {reminderToasts.map(({ id, memo }) => (
-            <div key={id} className="reminder-toast" role="alert">
+          {reminderToasts.length > 1 && (
+            <div className="reminder-toast-header">
+              <span>{reminderToasts.length}件のリマインド</span>
               <button
                 type="button"
-                className="reminder-toast-close"
-                onClick={() => setReminderToasts((prev) => prev.filter((toast) => toast.id !== id))}
-                aria-label="リマインドを閉じる"
+                className="reminder-toast-close-all"
+                onClick={() => setReminderToasts([])}
               >
-                ×
+                すべて閉じる
               </button>
-              <p className="reminder-toast-title">{memo.title || '無題'}</p>
-              {memo.content && <p className="reminder-toast-content">{memo.content}</p>}
-              {memo.reminderAt && (
-                <p className="reminder-toast-date">
-                  リマインド: {new Date(memo.reminderAt).toLocaleString('ja-JP')}
-                </p>
-              )}
             </div>
-          ))}
+          )}
+          <div className="reminder-toast-list">
+            {reminderToasts.map(({ id, memo }) => (
+              <div key={id} className="reminder-toast" role="alert">
+                <span className="reminder-toast-icon" aria-hidden="true">⏰</span>
+                <button
+                  type="button"
+                  className="reminder-toast-close"
+                  onClick={() => setReminderToasts((prev) => prev.filter((toast) => toast.id !== id))}
+                  aria-label="リマインドを閉じる"
+                >
+                  ×
+                </button>
+                <p className="reminder-toast-title">{memo.title || '無題'}</p>
+                {memo.content && <p className="reminder-toast-content">{memo.content}</p>}
+                {memo.reminderAt && (
+                  <p className="reminder-toast-date">
+                    リマインド: {new Date(memo.reminderAt).toLocaleString('ja-JP')}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
