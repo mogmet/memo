@@ -1,6 +1,6 @@
 ---
 name: generator
-description: 計画ファイルに基づいて機能を1つずつ実装する実装専任エージェント。仕様の範囲だけを実装し、機能の完了ごとにgit commitする。実装後は自己チェックリストを通し、code-evaluatorのレビューを受ける前提で仕上げる。
+description: 【レガシー / 通常は使わない】旧 feature-pipeline 用の Claude 実装エージェント。現在の実装担当は Codex(thread A) なので、dual-pipeline では使用しない。ユーザーが明示的に旧構成を指定した場合のみ使う。
 tools: Read, Write, Edit, Bash, Grep, Glob
 model: sonnet
 ---
