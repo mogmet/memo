@@ -8,8 +8,19 @@ import './App.css'
 export default function App() {
   const [memos, setMemos] = useState<Memo[]>([])
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const selectedMemo = memos.find((m) => m.id === selectedId) ?? null
+
+  const filteredMemos = (() => {
+    if (!searchQuery) return memos
+    const query = searchQuery.toLowerCase()
+    return memos.filter(
+      (memo) =>
+        memo.title.toLowerCase().includes(query) ||
+        memo.content.toLowerCase().includes(query),
+    )
+  })()
 
   const loadMemos = useCallback(async () => {
     const data = await fetchMemos()
@@ -24,6 +35,7 @@ export default function App() {
     const memo = await createMemo('', '')
     setMemos((prev) => [memo, ...prev])
     setSelectedId(memo.id)
+    setSearchQuery('')
   }
 
   const handleSave = async (title: string, content: string) => {
@@ -42,10 +54,13 @@ export default function App() {
   return (
     <div className="app">
       <MemoList
-        memos={memos}
+        memos={filteredMemos}
         selectedId={selectedId}
         onSelect={(memo) => setSelectedId(memo.id)}
         onNew={handleNew}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        hasMemos={memos.length > 0}
       />
       <MemoEditor
         memo={selectedMemo}
