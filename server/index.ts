@@ -75,6 +75,7 @@ app.put('/api/memos/:id', async (req, res) => {
   }
   const currentMemo = memos[index]
   const hasReminderAt = Object.prototype.hasOwnProperty.call(req.body, 'reminderAt')
+  const hasReminderTriggeredAt = Object.prototype.hasOwnProperty.call(req.body, 'reminderTriggeredAt')
   const reminderAt = hasReminderAt ? req.body.reminderAt || undefined : currentMemo.reminderAt
   const reminderChanged = hasReminderAt && reminderAt !== currentMemo.reminderAt
 
@@ -83,7 +84,11 @@ app.put('/api/memos/:id', async (req, res) => {
     title: req.body.title ?? currentMemo.title,
     content: req.body.content ?? currentMemo.content,
     reminderAt,
-    reminderTriggeredAt: reminderChanged ? undefined : currentMemo.reminderTriggeredAt,
+    reminderTriggeredAt: reminderChanged
+      ? undefined
+      : hasReminderTriggeredAt
+        ? req.body.reminderTriggeredAt || undefined
+        : currentMemo.reminderTriggeredAt,
     updatedAt: new Date().toISOString(),
   }
   await writeMemos(memos)

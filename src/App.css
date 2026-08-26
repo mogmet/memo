@@ -241,3 +241,55 @@ body {
   background: #e74c3c;
   color: #fff;
 }
+
+.reminder-toast-container {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reminder-toast {
+  position: relative;
+  width: 360px;
+  padding: 20px 44px 20px 20px;
+  background: #fff;
+  border: 1px solid #4a90d9;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+.reminder-toast-title {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.reminder-toast-content {
+  margin-top: 8px;
+  color: #555;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reminder-toast-date {
+  margin-top: 10px;
+  color: #666;
+  font-size: 13px;
+}
+
+.reminder-toast-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  border: none;
+  background: transparent;
+  color: #666;
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 1;
+}
