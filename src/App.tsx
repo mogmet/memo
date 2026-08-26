@@ -40,7 +40,13 @@ export default function App() {
 
   const handleSave = async (title: string, content: string) => {
     if (!selectedId) return
-    const updated = await updateMemo(selectedId, title, content)
+    const updated = await updateMemo(selectedId, { title, content })
+    setMemos((prev) => prev.map((m) => (m.id === updated.id ? updated : m)))
+  }
+
+  const handleReminderSave = async (reminderAt: string | null) => {
+    if (!selectedId) return
+    const updated = await updateMemo(selectedId, { reminderAt })
     setMemos((prev) => prev.map((m) => (m.id === updated.id ? updated : m)))
   }
 
@@ -65,6 +71,7 @@ export default function App() {
       <MemoEditor
         memo={selectedMemo}
         onSave={handleSave}
+        onReminderSave={handleReminderSave}
         onDelete={handleDelete}
       />
     </div>

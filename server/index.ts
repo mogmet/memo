@@ -14,6 +14,8 @@ export interface Memo {
   content: string
   createdAt: string
   updatedAt: string
+  reminderAt?: string
+  reminderTriggeredAt?: string
 }
 
 async function ensureDataFile() {
@@ -71,10 +73,17 @@ app.put('/api/memos/:id', async (req, res) => {
     res.status(404).json({ error: 'Not found' })
     return
   }
+  const currentMemo = memos[index]
+  const hasReminderAt = Object.prototype.hasOwnProperty.call(req.body, 'reminderAt')
+  const reminderAt = hasReminderAt ? req.body.reminderAt || undefined : currentMemo.reminderAt
+  const reminderChanged = hasReminderAt && reminderAt !== currentMemo.reminderAt
+
   memos[index] = {
-    ...memos[index],
-    title: req.body.title ?? memos[index].title,
-    content: req.body.content ?? memos[index].content,
+    ...currentMemo,
+    title: req.body.title ?? currentMemo.title,
+    content: req.body.content ?? currentMemo.content,
+    reminderAt,
+    reminderTriggeredAt: reminderChanged ? undefined : currentMemo.reminderTriggeredAt,
     updatedAt: new Date().toISOString(),
   }
   await writeMemos(memos)

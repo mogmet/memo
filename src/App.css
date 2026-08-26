@@ -107,6 +107,16 @@ body {
   color: #999;
 }
 
+.memo-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.memo-reminder-indicator {
+  font-size: 13px;
+}
+
 .memo-list .empty {
   padding: 24px 16px;
   text-align: center;
@@ -188,6 +198,28 @@ body {
   align-items: center;
   padding-top: 12px;
   border-top: 1px solid #e0e0e0;
+}
+
+.memo-footer-details {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.reminder-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  font-size: 12px;
+}
+
+.reminder-field input {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 5px 8px;
+  color: #333;
+  font: inherit;
 }
 
 .memo-updated {

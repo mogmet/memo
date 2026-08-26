@@ -4,4 +4,6 @@ export interface Memo {
   content: string
   createdAt: string
   updatedAt: string
+  reminderAt?: string
+  reminderTriggeredAt?: string
 }

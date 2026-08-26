@@ -42,9 +42,12 @@ export function MemoList({
             onClick={() => onSelect(memo)}
           >
             <span className="memo-title">{memo.title || '無題'}</span>
-            <span className="memo-date">
-              {new Date(memo.updatedAt).toLocaleDateString('ja-JP')}
-            </span>
+            <div className="memo-meta">
+              <span className="memo-date">
+                {new Date(memo.updatedAt).toLocaleDateString('ja-JP')}
+              </span>
+              {memo.reminderAt && <span className="memo-reminder-indicator">⏰</span>}
+            </div>
           </li>
         ))}
       </ul>
