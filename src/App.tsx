@@ -16,6 +16,8 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('')
   const [reminderToasts, setReminderToasts] = useState<ReminderToast[]>([])
   const pendingReminderIds = useRef(new Set<string>())
+  const audioContext = useRef<AudioContext | null>(null)
+  const isReminderSoundPlaying = useRef(false)
 
   const selectedMemo = memos.find((m) => m.id === selectedId) ?? null
 
@@ -39,6 +41,52 @@ export default function App() {
   }, [loadMemos])
 
   useEffect(() => {
+    const prepareAudio = () => {
+      if (!audioContext.current) {
+        const AudioContextClass = window.AudioContext
+        if (!AudioContextClass) return
+        audioContext.current = new AudioContextClass()
+      }
+      audioContext.current.resume().catch(() => {})
+    }
+
+    window.addEventListener('pointerdown', prepareAudio, { once: true })
+    return () => {
+      window.removeEventListener('pointerdown', prepareAudio)
+      audioContext.current?.close().catch(() => {})
+    }
+  }, [])
+
+  const playReminderSound = useCallback(() => {
+    const context = audioContext.current
+    if (!context || isReminderSoundPlaying.current) return
+
+    isReminderSoundPlaying.current = true
+    context.resume().then(() => {
+      const startTime = context.currentTime
+      ;[523.25, 659.25, 783.99].forEach((frequency, index) => {
+        const oscillator = context.createOscillator()
+        const gain = context.createGain()
+        const noteStart = startTime + index * 0.18
+        const noteEnd = noteStart + 0.15
+
+        oscillator.frequency.value = frequency
+        oscillator.type = 'sine'
+        gain.gain.setValueAtTime(0.04, noteStart)
+        gain.gain.exponentialRampToValueAtTime(0.001, noteEnd)
+        oscillator.connect(gain)
+        gain.connect(context.destination)
+        oscillator.start(noteStart)
+        oscillator.stop(noteEnd)
+      })
+    }).catch(() => {}).finally(() => {
+      window.setTimeout(() => {
+        isReminderSoundPlaying.current = false
+      }, 700)
+    })
+  }, [])
+
+  useEffect(() => {
     const checkReminders = async () => {
       const now = Date.now()
       const dueMemos = memos.filter(
@@ -49,7 +97,7 @@ export default function App() {
           !pendingReminderIds.current.has(memo.id),
       )
 
-      await Promise.all(dueMemos.map(async (memo) => {
+      const triggeredMemos = await Promise.all(dueMemos.map(async (memo) => {
         pendingReminderIds.current.add(memo.id)
         try {
           const updated = await updateMemo(memo.id, { reminderTriggeredAt: new Date().toISOString() })
@@ -57,16 +105,23 @@ export default function App() {
           setReminderToasts((prev) => prev.some((toast) => toast.id === memo.id)
             ? prev
             : [...prev, { id: memo.id, memo: updated }])
+          return updated
+        } catch {
+          return null
         } finally {
           pendingReminderIds.current.delete(memo.id)
         }
       }))
+
+      if (triggeredMemos.some((memo) => memo !== null)) {
+        playReminderSound()
+      }
     }
 
     checkReminders()
     const interval = window.setInterval(checkReminders, 30_000)
     return () => window.clearInterval(interval)
-  }, [memos])
+  }, [memos, playReminderSound])
 
   const handleNew = async () => {
     const memo = await createMemo('', '')
