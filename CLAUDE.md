@@ -22,3 +22,10 @@ TypeScript + React のメモアプリ。Vite（フロントエンド）+ Express
   - `components/MemoList.tsx` — メモ一覧サイドバー
   - `components/MemoEditor.tsx` — メモ編集エリア（onBlurで自動保存）
 - Viteのプロキシ設定で `/api` リクエストをExpressサーバーに転送
+
+## AI開発パイプライン
+
+機能実装は `/dual-pipeline <要件>` を使う（Planner=Claude → Generator=Codex(thread A) →
+Dual Validator=Claude(仕様・設計・論理)×Codex(実コード検証/thread B) → Aggregator が裁定、修正ループ最大3回）。
+Codex の呼び出しは `scripts/codex-thread.sh` がスレッド単位でセッションを永続化する。
+旧: `/feature-pipeline`（Claude 3体構成。dual-pipeline が上位版）。
