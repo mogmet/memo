@@ -5,20 +5,31 @@ import type { Memo } from '../types'
 interface Props {
   memo: Memo | null
   onSave: (title: string, content: string) => void
+  onReminderSave: (reminderAt: string | null) => void
   onDelete: () => void
 }
 
-export function MemoEditor({ memo, onSave, onDelete }: Props) {
+function formatDateTimeLocal(value?: string) {
+  if (!value) return ''
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return ''
+  const pad = (number: number) => String(number).padStart(2, '0')
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`
+}
+
+export function MemoEditor({ memo, onSave, onReminderSave, onDelete }: Props) {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
+  const [reminderAt, setReminderAt] = useState('')
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
     setTitle(memo?.title ?? '')
     setContent(memo?.content ?? '')
+    setReminderAt(formatDateTimeLocal(memo?.reminderAt))
     setShowEmojiPicker(false)
-  }, [memo])
+  }, [memo?.id])
 
   const insertEmoji = (emoji: string) => {
     const textarea = textareaRef.current
@@ -92,9 +103,20 @@ export function MemoEditor({ memo, onSave, onDelete }: Props) {
         onBlur={() => onSave(title, content)}
       />
       <div className="memo-editor-footer">
-        <span className="memo-updated">
-          更新: {new Date(memo.updatedAt).toLocaleString('ja-JP')}
-        </span>
+        <div className="memo-footer-details">
+          <label className="reminder-field">
+            リマインド
+            <input
+              type="datetime-local"
+              value={reminderAt}
+              onChange={(e) => setReminderAt(e.target.value)}
+              onBlur={() => onReminderSave(reminderAt ? new Date(reminderAt).toISOString() : null)}
+            />
+          </label>
+          <span className="memo-updated">
+            更新: {new Date(memo.updatedAt).toLocaleString('ja-JP')}
+          </span>
+        </div>
         <button onClick={onDelete} className="btn-delete">削除</button>
       </div>
     </div>
