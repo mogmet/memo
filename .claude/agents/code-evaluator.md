@@ -1,6 +1,6 @@
 ---
 name: code-evaluator
-description: 実装の変更を厳格にレビューし、PASS/FAIL を二値で判定する評価専任エージェント。実装を書いたあと、必ずこのエージェントに変更内容をレビューさせる。仕様どおりか・本物の実装か・エッジケースを潰せているかを、ファイルパスと行番号つきで具体的に指摘する。
+description: 【レガシー / 通常は使わない】旧 feature-pipeline 用の単独レビューエージェント。現在は claude-validator と codex-validator の二重検証に置き換わっているため、dual-pipeline では使用しない。ユーザーが明示的に旧構成を指定した場合のみ使う。
 tools: Read, Grep, Glob, Bash
 model: sonnet
 ---

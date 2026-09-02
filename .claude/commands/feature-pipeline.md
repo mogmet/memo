@@ -1,6 +1,9 @@
 ---
-description: Planner → Generator → Evaluator の3エージェントで機能を実装するパイプライン
+description: 【レガシー】Claude 3体（Planner → Generator → Evaluator）の旧パイプライン。現在は dual-pipeline スキルを使う
 ---
+
+> **注意**: これは旧構成。現在は `dual-pipeline` スキル（Claude×Codex の二重検証）が
+> 自動発動するため、通常はそちらを使う。このコマンドは比較・検証用に残している。
 
 以下の要件を、3つのサブエージェントに分離して実装する。あなた（メイン）は各エージェントを
 順番に呼び出し、ファイル経由で受け渡す「オーケストレーター」に徹する。自分では実装・評価をしない。
